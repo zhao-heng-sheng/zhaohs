@@ -29,8 +29,11 @@ export class HistoryService {
     }
   }
 
-  findAll() {
-    return `This action returns all history`;
+  async findAll() {
+    let res = await this.userRepository.find()
+    console.log(res);
+    
+    return res;
   }
 
   findOne(id: number) {

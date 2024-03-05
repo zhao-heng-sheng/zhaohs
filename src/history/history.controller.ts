@@ -15,6 +15,8 @@ export class HistoryController {
 
   @Get()
   findAll() {
+    console.log('findAll');
+    
     return this.historyService.findAll();
   }
 
