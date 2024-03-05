@@ -5,7 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HistoryModule } from './history/history.module';
 import { History } from './history/entities/history.entity';
-import path from 'path';
+import * as path from 'path';
 
 @Module({
   imports: [

@@ -9,11 +9,7 @@ export class AppController {
   private readonly configService:ConfigService
   @Get()
   getHello(){
-    return{
-      env:process.env,
-      aaa:this.configService.get('aaa'),
-      bbb:this.configService.get('bbb')
-    }
+    return 'hello zhs'
     // return this.appService.getHello();
   }
 }
