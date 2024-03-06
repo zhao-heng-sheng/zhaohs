@@ -18,12 +18,23 @@ jobs:
           fetch-depth: 0
 
       - name: Deploy to to server
-        uses: wlixcc/SFTP-Deploy-Action@v1.0 
+        uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
-          username: 'root'   #ssh user name
+          username: 'root' #ssh user name
           server: '118.195.232.109' #引用之前创建好的secret
           ssh_private_key: ${{ secrets.SSH_KEY }} #引用之前创建好的secret
-          local_path: './'  # 对应我们项目build的文件夹路径
+          local_path: './' # 对应我们项目build的文件夹路径
           remote_path: '/www/wwwroot/zhaohs'
-        run: docker build -t zhaohs .  && docker stop zhaohs && docker rm zhaohs && docker run -d -p 3001:3000 --name zhaohs  zhaohs
-      
+
+      - name: run docker
+        uses: appleboy/ssh-action@master
+        with:
+          host: '118.195.232.109'
+          username: 'root'
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /www/wwwroot/zhaohs
+            docker stop zhaohs
+            docker rm zhaohs
+            docker build -t zhaohs .
+            docker run -d -p 3001:3000 --name zhaohs  zhaohs
