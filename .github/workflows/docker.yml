@@ -1,0 +1,40 @@
+# name: notes
+
+# on:
+#   # 每当 push 到 main 分支时触发部署
+#   push:
+#     branches: [master]
+#   # 手动触发部署
+#   workflow_dispatch:
+
+# jobs:
+#   docs:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v3
+#         with:
+#           # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
+#           fetch-depth: 0
+
+#       - name: Deploy to to server
+#         uses: wlixcc/SFTP-Deploy-Action@v1.0
+#         with:
+#           username: 'root' #ssh user name
+#           server: '118.195.232.109' #引用之前创建好的secret
+#           ssh_private_key: ${{ secrets.SSH_KEY }} #引用之前创建好的secret
+#           local_path: './' # 对应我们项目build的文件夹路径
+#           remote_path: '/www/wwwroot/zhaohs'
+
+#       - name: run docker
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: '118.195.232.109'
+#           username: 'root'
+#           key: ${{ secrets.SSH_KEY }}
+#           script: |
+#             cd /www/wwwroot/zhaohs
+#             docker stop zhaohs
+#             docker rm zhaohs
+#             docker build -t zhaohs .
+#             docker run -d -p 3001:3000 --name zhaohs  zhaohs
