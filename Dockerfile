@@ -23,6 +23,6 @@ WORKDIR /app
 
 RUN npm config set registry https://registry.npmmirror.com/
 RUN npm install --production
-ENV NODE_ENV=production
 EXPOSE 3000
+ENV NODE_ENV=production
 CMD ["node", "/app/main.js"]
