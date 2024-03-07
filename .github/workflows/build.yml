@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: install and build
-        run: |
-          npm install -g pnpm
-          pnpm install
-          npm run build
+      # - uses: actions/checkout@v3
+      # - name: install and build
+      #   run: |
+      #     npm install -g pnpm
+      #     pnpm install
+      #     npm run build
 
-      - name: Deploy to to server
+      - name: files to server
         uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
           username: 'root' #ssh user name
@@ -36,6 +36,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /www/wwwroot/zhaohs
+            pnpm install
+            npm run build
             cp .env ./dist
             cp .env.production ./dist
             NODE_ENV=production pm2 restart ./dist/main.js --name zhaohs  --update-env
