@@ -1,4 +1,4 @@
-name: notes
+name: build
 
 on:
   # 每当 push 到 main 分支时触发部署
@@ -12,13 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
+      - name: install and build
+        run: |
+          pnpm install
+          pnpm run build
+
       - name: Deploy to to server
         uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
           username: 'root' #ssh user name
           server: '118.195.232.109' #引用之前创建好的secret
           ssh_private_key: ${{ secrets.SSH_KEY }} #引用之前创建好的secret
-          local_path: './' # 对应我们项目build的文件夹路径
+          local_path: './dist' # 对应我们项目build的文件夹路径
           remote_path: '/www/wwwroot/zhaohs'
 
       - name: build and run project
@@ -29,6 +35,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /www/wwwroot/zhaohs
-            pnpm install
-            npm run build
-            pm2 restart ./dist/main.js --name zhaohs
+            pm2 restart ./main.js --name zhaohs
