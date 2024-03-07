@@ -12,33 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
-          fetch-depth: 0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          # 选择要使用的 pnpm 版本
-          version: 7
-          # 使用 pnpm 安装依赖
-          run_install: true
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          # 选择要使用的 node 版本
-          node-version: 20
-          # 缓存 pnpm 依赖
-          cache: pnpm
-
-      # 运行构建脚本
-      - name: Build
-        run: pnpm run build
-
-      # 查看 workflow 的文档来获取更多信息
-      # @see https://github.com/crazy-max/ghaction-github-pages
       - name: Deploy to to server
         uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
@@ -48,7 +21,7 @@ jobs:
           local_path: './dist' # 对应我们项目build的文件夹路径
           remote_path: '/www/wwwroot/zhaohs'
 
-      - name: run project
+      - name: build and run project
         uses: appleboy/ssh-action@master
         with:
           host: '118.195.232.109'
@@ -56,4 +29,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /www/wwwroot/zhaohs
-            pm2 start main.js
+            pnpm install
+            npm run build
+            pm2 restart ./dist/main.js --name zhaohs
