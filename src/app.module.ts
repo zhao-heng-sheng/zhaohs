@@ -27,6 +27,7 @@ import * as path from 'path';
           database: configService.get('mysql_server_database'),
           synchronize: process.env.NODE_ENV === 'production' ? false : true,
           logging: true,
+          timezone:'+08:00',
           entities: [History],
           poolSize: 10,
           connectorPackage: 'mysql2',
