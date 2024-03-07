@@ -19,14 +19,14 @@ jobs:
       #     pnpm install
       #     npm run build
 
-      - name: files to server
-        uses: wlixcc/SFTP-Deploy-Action@v1.0
+      - name: Copy files to server
+        uses: appleboy/scp-action@master
         with:
           username: 'root' #ssh user name
-          server: '118.195.232.109' #引用之前创建好的secret
-          ssh_private_key: ${{ secrets.SSH_KEY }} #引用之前创建好的secret
-          local_path: './'
-          remote_path: '/www/wwwroot/zhaohs'
+          host: '118.195.232.109' #引用之前创建好的secret
+          key: ${{ secrets.SSH_KEY }} #引用之前创建好的secret
+          source: './'
+          target: '/www/wwwroot/zhaohs'
 
       - name: build and run project
         uses: appleboy/ssh-action@master
