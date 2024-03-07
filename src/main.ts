@@ -1,19 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { log } from 'console';
-import fs from 'fs'
-import * as https from "https";
+import * as fs from 'fs';
+import * as path from 'path';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-
 const httpsOptions = {
-  ca: fs.readFileSync('root_bundle.crt文件地址'),
-  key: fs.readFileSync('.key文件地址'),
-  cert: fs.readFileSync('另一个.crt文件地址'),
+  ca: fs.readFileSync(path.join(__dirname, '../secrets/root_bundle.crt')),
+  key: fs.readFileSync(path.join(__dirname, '../secrets/zhaohs.cn.key')),
+  cert: fs.readFileSync(path.join(__dirname, '../secrets/zhaohs.cn.crt')),
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
   //swagger
   const config = new DocumentBuilder()
     .setTitle('zhaohs swagger')
@@ -32,7 +31,7 @@ async function bootstrap() {
     }),
   );
   await app.listen(3000);
-  https.createServer(httpsOptions, server).listen(443);
+  // https.createServer(httpsOptions, server).listen(443);
   log('http://localhost:3000');
 }
 bootstrap();
