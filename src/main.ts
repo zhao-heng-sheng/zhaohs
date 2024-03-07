@@ -32,6 +32,6 @@ async function bootstrap() {
   );
   await app.listen(3000);
   // https.createServer(httpsOptions, server).listen(443);
-  log('http://localhost:3000');
+  log('https://localhost:3000');
 }
 bootstrap();
