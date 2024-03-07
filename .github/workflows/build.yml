@@ -38,4 +38,4 @@ jobs:
             cd /www/wwwroot/zhaohs
             cp .env ./dist
             cp .env.production ./dist
-            pm2 restart ./dist/main.js --name zhaohs
+            NODE_ENV=production pm2 restart ./dist/main.js --name zhaohs
