@@ -36,4 +36,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /www/wwwroot/zhaohs
-            pm2 restart ./main.js --name zhaohs
+            cp .env ./dist
+            cp .env.production ./dist
+            pm2 restart ./dist/main.js --name zhaohs
