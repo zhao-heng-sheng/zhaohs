@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HistoryModule } from './history/history.module';
 import { History } from './history/entities/history.entity';
+import { EmailModule } from './email/email.module';
 import * as path from 'path';
 
 @Module({
@@ -27,7 +28,7 @@ import * as path from 'path';
           database: configService.get('mysql_server_database'),
           synchronize: process.env.NODE_ENV === 'production' ? false : true,
           logging: true,
-          timezone:'+08:00',
+          timezone: '+08:00',
           entities: [History],
           poolSize: 10,
           connectorPackage: 'mysql2',
@@ -36,6 +37,7 @@ import * as path from 'path';
       inject: [ConfigService],
     }),
     HistoryModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

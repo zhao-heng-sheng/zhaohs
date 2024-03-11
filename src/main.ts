@@ -1,10 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { log } from 'console';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as express from 'express';
+import * as https from 'https';
+import * as http from 'http';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { ExpressAdapter } from '@nestjs/platform-express';
 const httpsOptions = {
   ca: fs.readFileSync(path.join(__dirname, '../secrets/root_bundle.crt')),
   key: fs.readFileSync(path.join(__dirname, '../secrets/zhaohs.cn.key')),
@@ -12,7 +16,11 @@ const httpsOptions = {
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
+  const server = express();
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server), {
+    cors: true,
+  });
+  // const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
   //swagger
   const config = new DocumentBuilder()
     .setTitle('zhaohs swagger')
@@ -30,8 +38,16 @@ async function bootstrap() {
       },
     }),
   );
-  await app.listen(3000);
-  // https.createServer(httpsOptions, server).listen(443);
-  log('https://localhost:3000');
+
+  await app.init();
+  const configService = app.get(ConfigService);
+  // await app.listen(configService.get('nest_server_port') || 3000);
+  process.env.NODE_ENV === 'production'
+    ? https
+        .createServer(httpsOptions, server)
+        .listen(configService.get('nest_server_port') || 3000)
+    : http
+        .createServer(server)
+        .listen(configService.get('nest_server_port') || 3000);
 }
 bootstrap();
