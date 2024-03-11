@@ -32,12 +32,15 @@ export class HistoryService {
   async findAll() {
     let res = await this.userRepository.find()
     console.log(res);
-    
     return res;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} history`;
+  }
+
+  search(keyword:string){
+    return 
   }
 
   remove(id: number) {
