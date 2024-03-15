@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { HistoryService } from './history.service';
 import { CreateHistoryDto } from './dto/create-history.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -14,10 +14,16 @@ export class HistoryController {
   }
 
   @Get()
-  findAll() {
-    console.log('findAll');
+  list() {
+    console.log('list');
+    return this.historyService.list();
+  }
+
+  @Get('search')
+  search(@Query('keyword') keyword: string) {
+    console.log('search',keyword);
     
-    return this.historyService.findAll();
+    return this.historyService.search(keyword);
   }
 
   @Get(':id')
